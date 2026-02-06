@@ -31,7 +31,7 @@ def to_local_filter(dt):
     # If dt has no timezone info, attach UTC
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    local_tz = ZoneInfo("Asia/kolkata")
+    local_tz = ZoneInfo("Asia/Kolkata")
     return dt.astimezone(local_tz).strftime("%Y-%m-%d %I:%M:%S %p")
 
 
