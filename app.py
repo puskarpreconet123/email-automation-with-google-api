@@ -3,6 +3,7 @@ import os
 from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
 
@@ -30,7 +31,8 @@ def to_local_filter(dt):
     # If dt has no timezone info, attach UTC
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone().strftime("%Y-%m-%d %I:%M:%S %p")
+    local_tz = ZoneInfo("Asia/kolkata")
+    return dt.astimezone(local_tz).strftime("%Y-%m-%d %I:%M:%S %p")
 
 
 client = MongoClient(os.getenv("MONGO_URI"))
