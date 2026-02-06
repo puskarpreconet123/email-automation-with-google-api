@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+  
+  <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+  <div class="mb-4 sm:mb-0">
+    <div class="flex items-center gap-3">
+      <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
+      <span
+  id="automationStatus"
+  class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-100"
+>
+  <span class="relative flex h-2 w-2">
+    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+  </span>
+  Running
+</span>
+    </div>
+    <p class="text-gray-500 mt-1 text-sm font-medium">Manage your users and monitor email campaign health.</p>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <a href="/stop" 
+       class="automaton_button inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-bold rounded-xl text-white bg-red-600 hover:bg-red-700 shadow-sm shadow-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all active:scale-95">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Stop Automation
+    </a>
+  </div>
+</div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow duration-300">
+      <div>
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Users</p>
+        <p class="text-4xl font-extrabold text-indigo-600 mt-2">{{ users }}</p>
+      </div>
+      <div class="p-3 bg-indigo-50 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow duration-300">
+      <div>
+        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Emails Sent</p>
+        <p class="text-4xl font-extrabold text-emerald-600 mt-2">{{ emails }}</p>
+      </div>
+      <div class="p-3 bg-emerald-50 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-gray-200 mb-6">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <button onclick="showTab('home', event)" class="tab-btn active-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600">
+        Overview
+      </button>
+      <button onclick="showTab('allUser', event)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        User Management
+      </button>
+    </nav>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
+    
+    <div id="home" class="tab-content p-8 max-w-5xl mx-auto">
+  <div class="text-center py-10 bg-white rounded-3xl shadow-sm border border-slate-100 mb-10">
+    <div class="bg-indigo-50 inline-flex p-4 rounded-2xl mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+    </div>
+    <h2 class="text-3xl font-extrabold text-gray-900">Welcome to Admin Area</h2>
+    <p class="text-gray-500 mt-3 max-w-md mx-auto text-lg">
+      Manage your email automation workflows and monitor recipient groups efficiently.
+    </p>
+  </div>
+
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <span class="w-2 h-8 bg-indigo-500 rounded-full"></span>
+        Active Segments
+      </h3>
+      <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">2 Groups Total</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 cursor-pointer">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M12 14l9-5-9-5-9 5 9 5z" />
+              <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900">Students</h4>
+            <p class="text-sm text-gray-500">Automated learning tracks</p>
+          </div>
+          <div class="ml-auto">
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 cursor-pointer">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center group-hover:bg-emerald-600 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900">Teachers</h4>
+            <p class="text-sm text-gray-500">Staff communications</p>
+          </div>
+          <div class="ml-auto">
+            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div id="allUser" class="tab-content hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h2 class="text-lg font-semibold text-gray-700">Listed Emails</h2>
+        <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">{{ allUser|length }} Records</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+              <th scope="col" class="px-6 py-4 font-semibold">S.No</th>
+              <th scope="col" class="px-6 py-4 font-semibold">Email Identity</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-center">Messages Sent</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+          {% for user in allUser %}
+           <tr class="hover:bg-gray-50 transition-colors duration-150" id="{{ user._id }}">
+
+<th scope="row" class="px-6 py-4 text-gray-500 font-medium">{{ loop.index }}</th>
+
+<td class="px-6 py-4">
+  <div class="flex items-center">
+    <div class="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs mr-3">
+      {{ user.email[0]|upper }}
+    </div>
+    <span class="text-gray-700 font-medium">{{ user.email }}</span>
+  </div>
+</td>
+
+<td class="px-6 py-4 text-center">
+  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+    {{ user.noOfEmailsSend }}
+  </span>
+</td>
+
+<td class="px-6 py-4 text-right space-x-2">
+  <a href="/details/{{ user._id }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
+    Details
+  </a>
+
+  <a href="/delete/{{ user._id }}"
+     onclick="return confirm('Are you sure you want to delete this user?')"
+     class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-600 bg-red-50 hover:bg-red-100">
+    Delete
+  </a>
+</td>
+
+          {% endfor %}
+          </tbody>
+        </table>
+        
+        {% if allUser|length == 0 %}
+        <div class="p-8 text-center text-gray-500">
+            No users found.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+  function showTab(tabId, event) {
+    // 1. Hide all tab content
+    document.querySelectorAll('.tab-content').forEach(el => {
+      el.classList.add('hidden');
+    });
+    
+    // 2. Show the specific tab content
+    document.getElementById(tabId).classList.remove('hidden');
+
+    // 3. Reset all tab buttons to "inactive" style
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('border-indigo-500', 'text-indigo-600');
+      btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+    });
+
+    // 4. Set the clicked button to "active" style
+    if(event) {
+        event.currentTarget.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        event.currentTarget.classList.add('border-indigo-500', 'text-indigo-600');
+    }
+  }
+
+  async function automation_status() {
+    try {
+      const res = await fetch("/status");
+      const data = await res.json();
+
+      const badge = document.getElementById("automationStatus");
+      const button = document.querySelector(".automaton_button");
+
+      if (data.running) {
+        badge.className =
+          "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-100";
+        badge.innerHTML = `
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Running
+        `;
+        button.classList.remove("bg-green-600", "hover:bg-green-700, focus:ring-green-500");
+        button.classList.add("bg-red-600", "hover:bg-red-700, focus:ring-red-500");
+        button.textContent = "Stop Automation";
+        button.href = "/stop";
+      } else {
+        badge.className =
+          "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider border border-red-100";
+        badge.innerHTML = `
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+          Stopped
+        `;
+        button.classList.remove("bg-red-600", "hover:bg-red-700" ,"focus:ring-red-500");
+        button.classList.add("bg-green-600", "hover:bg-green-700", "focus:ring-green-500");
+        button.textContent = "Start Automation";
+        button.href = "/start";
+      }
+    } catch (err) {
+      console.error("Failed to fetch automation status");
+    }
+  }
+
+  automation_status();
+
+  // Optional: refresh every 10 seconds
+  setInterval(automation_status, 10000);
+
+</script>
+{% endblock %}

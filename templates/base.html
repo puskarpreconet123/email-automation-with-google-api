@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Dashboard{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-900">
+ 
+    <nav class="bg-slate-900/95 sticky top-0 z-50 px-8 py-4 flex items-center justify-between shadow-xl backdrop-blur-md">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+        <span class="text-white font-bold text-xs">EA</span>
+      </div>
+      <h2 class="text-lg font-bold tracking-tight text-white">Email<span class="text-blue-400">Automation</span></h2>
+    </div>
+    
+    <div class="flex gap-1 bg-slate-800/50 p-1.5 rounded-2xl border border-slate-700">
+      <a href="/"
+         class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+         {% if active == 'home' %} bg-blue-600 text-white shadow-lg shadow-blue-900/20 {% else %} text-slate-400 hover:text-white hover:bg-slate-700 {% endif %}">
+        Dashboard
+      </a>
+      <a href="/emailForm"
+         class="px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+         {% if active == 'emailForm' %} bg-blue-600 text-white shadow-lg shadow-blue-900/20 {% else %} text-slate-400 hover:text-white hover:bg-slate-700 {% endif %}">
+        Add Email
+      </a>
+    </div>
+  </nav>
+ 
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+</html>
