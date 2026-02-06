@@ -81,7 +81,7 @@
               <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Last Interaction</label>
               <p class="text-sm text-slate-700">
                 {% if user.lastSend %}
-                  {{ user.lastSend.strftime('%d %b %Y, %H:%M') }}
+                  {{ user.lastSend | to_local }}
                 {% else %}
                   <span class="text-amber-500 italic">No activity recorded</span>
                 {% endif %}
@@ -91,7 +91,7 @@
             <div class="pt-2">
               <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Created On</label>
               <p class="text-sm text-slate-700">
-                {{ user.dateCreated.strftime('%d %b %Y') }}
+                {{ user.dateCreated | to_local }}
               </p>
             </div>
           </div>

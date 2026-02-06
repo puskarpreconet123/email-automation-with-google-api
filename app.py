@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect
 import os
 from pymongo import MongoClient
 from bson import ObjectId
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from apscheduler.schedulers.background import BackgroundScheduler
 import json
 
@@ -20,12 +20,25 @@ from googleapiclient.discovery import build
 
 app = Flask(__name__)
 
+# convert utc to local time and apply to jinja
+
+@app.template_filter('to_local')
+def to_local_filter(dt):
+    if not dt:
+        return "N/A"
+    
+    # If dt has no timezone info, attach UTC
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone().strftime("%Y-%m-%d %I:%M:%S %p")
+
+
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["emailAutomation"]
 users_collection = db["users"]
 
 
-# steps  for sendin via google api . protocol - http, step-2
+# steps  for sending via google api . protocol - http, step-2
  
 def send_email_api(to_email, subject, template, data):
     try:
@@ -54,6 +67,7 @@ def send_email_api(to_email, subject, template, data):
         
         # Send
         service.users().messages().send(userId="me", body={'raw': raw_message}).execute()
+        print("Email sent")
         return True
     except Exception as e:
         print(f"Error in send_email_api function: {e}")
@@ -66,7 +80,7 @@ def send_email(user):
         {"_id": user["_id"]},
         {
             "$inc": {"noOfEmailsSend": 1},
-            "$set": {"lastSend": datetime.now()}
+            "$set": {"lastSend": datetime.now(timezone.utc)}
         }
         )
 
@@ -109,7 +123,7 @@ def dashboard():
             "message": message,
             "group": group,
             "noOfEmailsSend": 0,
-            "dateCreated": datetime.now(),
+            "dateCreated": datetime.now(timezone.utc),
             "lastSend": None
         })
 
@@ -189,14 +203,19 @@ def scheduler_status():
 def job():
     with app.app_context():
         all_users = list(users_collection.find())
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
 
         for user in all_users:
+            
             if user["lastSend"] is None:
                 send_email(user)
                 continue
 
-            diff = now - user["lastSend"]
+            last_send = user["lastSend"]
+            if last_send.tzinfo is None:
+                last_send = last_send.replace(tzinfo=timezone.utc)
+
+            diff = now - last_send
 
             if user["group"].lower() == "student":
                 if user["noOfEmailsSend"] < 3 and diff >= timedelta(minutes=1):
@@ -216,8 +235,6 @@ def create_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(job, 'interval', seconds=20, id="email_scheduler")
     scheduler.start()
-
-# scheduler.add_job(job, 'interval', seconds=20, id="email_scheduler")
 
 if __name__ == "__main__":
     create_scheduler()
