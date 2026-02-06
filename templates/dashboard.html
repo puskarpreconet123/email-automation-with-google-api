@@ -224,6 +224,7 @@
     try {
       const res = await fetch("/status");
       const data = await res.json();
+      console.log(data.running)
 
       const badge = document.getElementById("automationStatus");
       const button = document.querySelector(".automaton_button");
@@ -238,8 +239,8 @@
           </span>
           Running
         `;
-        button.classList.remove("bg-green-600", "hover:bg-green-700, focus:ring-green-500");
-        button.classList.add("bg-red-600", "hover:bg-red-700, focus:ring-red-500");
+        button.classList.remove("bg-green-600", "hover:bg-green-700", "focus:ring-green-500");
+        button.classList.add("bg-red-600", "hover:bg-red-700", "focus:ring-red-500");
         button.textContent = "Stop Automation";
         button.href = "/stop";
       } else {
@@ -255,7 +256,7 @@
         button.href = "/start";
       }
     } catch (err) {
-      console.error("Failed to fetch automation status");
+      console.error("Failed to fetch automation status",  err);
     }
   }
 

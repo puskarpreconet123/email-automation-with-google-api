@@ -72,7 +72,11 @@
       <div>
         <span class="font-semibold text-gray-900">Last Sent:</span>
         <span class="ml-2">
-          {{ user.lastSend.strftime('%d %b %Y %H:%M') }}
+          {% if user.lastSend %}
+            {{ user.lastSend.strftime('%d %b %Y %H:%M') }}
+          {% else %}
+            {{"No Mail Send Till Now"}}
+          {% endif %}
         </span>
       </div>
 

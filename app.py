@@ -30,9 +30,9 @@ users_collection = db["users"]
 def send_email_api(to_email, subject, template, data):
     try:
         # Load the token.json from env variable
-        token_str = os.getenv("MAIL_TOKEN_JSON")
+        token_str = os.getenv("GMAIL_TOKEN_JSON")
         if not token_str:
-            print("Error: MAIL_TOKEN_JSON environment variable is not set!")
+            print("Error in token_str: GMAIL_TOKEN_JSON environment variable is not set!")
             return False
         tokeninfo=json.loads(token_str)
         creds = Credentials.from_authorized_user_info(tokeninfo)
@@ -56,29 +56,34 @@ def send_email_api(to_email, subject, template, data):
         service.users().messages().send(userId="me", body={'raw': raw_message}).execute()
         return True
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error in send_email_api function: {e}")
         return False
 #-------------------------------------------------------------------------------------
 
 def send_email(user):
-    users_collection.update_one(
+    try:
+        users_collection.update_one(
         {"_id": user["_id"]},
         {
             "$inc": {"noOfEmailsSend": 1},
             "$set": {"lastSend": datetime.now()}
         }
-    )
+        )
 
-    send_email_api(
-        user["email"],
-        user["subject"],
-        "email.html",
-        {
-            "name": user["name"],
-            "message": user["message"],
-            "sender": "Backend Team"
-        }
-    )
+        send_email_api(
+            user["email"],
+            user["subject"],
+            "email.html",
+            {
+                "name": user["name"],
+                "message": user["message"],
+                "sender": "Backend Team"
+            }
+        )
+        return True
+    except Exception as e:
+        print(f"Error in send_email function: {e}")
+        return False
 
 @app.route("/emailForm")
 def emailForm():
@@ -105,7 +110,7 @@ def dashboard():
             "group": group,
             "noOfEmailsSend": 0,
             "dateCreated": datetime.now(),
-            "lastSend": datetime.now()
+            "lastSend": None
         })
 
         return redirect("/")
@@ -187,19 +192,20 @@ def job():
         now = datetime.now()
 
         for user in all_users:
-            if not user.get("lastSend"):
+            if user["lastSend"] is None:
+                send_email(user)
                 continue
 
             diff = now - user["lastSend"]
 
             if user["group"].lower() == "student":
-                if user["noOfEmailsSend"] <= 3 and diff >= timedelta(minutes=1):
+                if user["noOfEmailsSend"] < 3 and diff >= timedelta(minutes=1):
                     send_email(user)
-                elif user["noOfEmailsSend"] > 3 and diff >= timedelta(minutes=5):
+                elif user["noOfEmailsSend"] >= 3 and diff >= timedelta(minutes=5):
                     send_email(user)
 
             elif user["group"].lower() == "teacher":
-                if user["noOfEmailsSend"] <= 2:
+                if user["noOfEmailsSend"] <=5:
                     send_email(user)
 
 
@@ -214,4 +220,5 @@ def create_scheduler():
 # scheduler.add_job(job, 'interval', seconds=20, id="email_scheduler")
 
 if __name__ == "__main__":
+    create_scheduler()
     app.run()
