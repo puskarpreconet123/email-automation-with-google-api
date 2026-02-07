@@ -78,15 +78,7 @@ def send_email_api(to_email, subject, template, data):
 
 def send_email(user):
     try:
-        users_collection.update_one(
-        {"_id": user["_id"]},
-        {
-            "$inc": {"noOfEmailsSend": 1},
-            "$set": {"lastSend": datetime.now(timezone.utc)}
-        }
-        )
-
-        send_email_api(
+        success = send_email_api(
             user["email"],
             user["subject"],
             "email.html",
@@ -96,6 +88,18 @@ def send_email(user):
                 "sender": "Backend Team"
             }
         )
+
+        if not success:
+            return False
+        
+        users_collection.update_one(
+        {"_id": user["_id"]},
+        {
+            "$inc": {"noOfEmailsSend": 1},
+            "$set": {"lastSend": datetime.now(timezone.utc)}
+        }
+        )
+
         return True
     except Exception as e:
         print(f"Error in send_email function: {e}")
@@ -225,10 +229,16 @@ def job():
                 elif user["noOfEmailsSend"] >= 3 and diff >= timedelta(minutes=5):
                     send_email(user)
 
-            elif user["group"].lower() == "teacher":
+            elif user["group"].lower() == "teacher" and diff >= timedelta(seconds=30):
                 if user["noOfEmailsSend"] <=5:
                     send_email(user)
-
+            elif user["group"].lower() == "office":
+                if user["noOfEmailsSend"] < 2 and diff >= timedelta(minutes=15):
+                    send_email(user)
+                elif user["noOfEmailsSend"] == 2 and diff >= timedelta(minutes=30):
+                    send_email(user)
+                elif user["noOfEmailsSend"] >= 3 and diff >= timedelta(hours=2):
+                    send_email(user)
 
 scheduler = None
 
