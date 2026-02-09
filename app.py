@@ -38,6 +38,7 @@ def to_local_filter(dt):
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["emailAutomation"]
 users_collection = db["users"]
+groups_collection = db["groups"]
 
 
 # steps  for sending via google api . protocol - http, step-2
@@ -105,10 +106,6 @@ def send_email(user):
         print(f"Error in send_email function: {e}")
         return False
 
-@app.route("/emailForm")
-def emailForm():
-  return  render_template("emailAutomationForm.html", active="emailForm")
-
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
     if request.method == "POST":
@@ -136,6 +133,7 @@ def dashboard():
         return redirect("/")
 
     all_users = list(users_collection.find())
+    all_group = list(groups_collection.find())
 
     total_users = users_collection.count_documents({})
     total_emails_send = sum(u.get("noOfEmailsSend", 0) for u in all_users)
@@ -145,19 +143,15 @@ def dashboard():
         allUser=all_users,
         active="home",
         users=total_users,
-        emails=total_emails_send
+        emails=total_emails_send,
+        allGroup=all_group,
     )
 
-@app.route('/details/<id>')
-def user_details(id):
-    user = users_collection.find_one({"_id": ObjectId(id)})
-    return render_template("userCard.html", user=user)
 
-
-@app.route('/delete/<id>')
-def delete_user(id):
-    users_collection.delete_one({"_id": ObjectId(id)})
-    return redirect("/")
+@app.route("/emailForm")
+def emailForm():
+  all_group = list(groups_collection.find())
+  return  render_template("emailAutomationForm.html", active="emailForm", allGroup = all_group)
 
 
 @app.route('/emailForm-edit/<id>', methods=['GET', 'POST'])
@@ -176,7 +170,56 @@ def update_user(id):
         return redirect("/")
 
     user = users_collection.find_one({"_id": ObjectId(id)})
-    return render_template("emailAutomationForm.html", user=user)
+    all_group = list(groups_collection.find())
+    return render_template("emailAutomationForm.html", user=user, allGroup=all_group)
+
+
+@app.route("/create-group", methods=["POST"])
+def create_group():
+    group_name = request.form.get("group_name")
+
+    group_exist = groups_collection.find_one({"groupName": group_name.lower()}) is not None
+    if group_exist:
+        return render_template("showerror.html", error_message="Group already exists")
+
+    rule1 = {
+        "maxEmails": int(request.form.get("rule1_maxEmails") or 0),
+        "wait": {
+            "value": int(request.form.get("rule1_wait_value") or 0),
+            "unit": request.form.get("rule1_wait_unit")
+        }
+    }
+
+    rule2 = {
+        "maxEmails": int(request.form.get("rule2_maxEmails") or 0),
+        "wait": {
+            "value": int(request.form.get("rule2_wait_value") or 0),
+            "unit": request.form.get("rule2_wait_unit")
+        }
+    }
+
+    group_doc = {
+        "groupName": group_name.lower(),
+        "rules": [rule1, rule2],
+        "createdAt": datetime.now(timezone.utc)
+    }
+
+    groups_collection.insert_one(group_doc)
+
+    return redirect("/")
+
+
+
+@app.route('/details/<id>')
+def user_details(id):
+    user = users_collection.find_one({"_id": ObjectId(id)})
+    return render_template("userCard.html", user=user)
+
+
+@app.route('/delete/<id>')
+def delete_user(id):
+    users_collection.delete_one({"_id": ObjectId(id)})
+    return redirect("/")
 
 
 @app.route("/start")
@@ -204,7 +247,23 @@ def stop_scheduler():
 def scheduler_status():
     return {"running": scheduler.running if scheduler else False}
 
+def get_timedelta(wait):
+    value = wait["value"]
+    unit = wait["unit"]
 
+    if unit == "seconds":
+        return timedelta(seconds=value)
+    if unit == "minutes":
+        return timedelta(minutes=value)
+    if unit == "hours":
+        return timedelta(hours=value)
+    if unit == "days":
+        return timedelta(days=value)
+    return print("Error to fetch timedelta")
+
+def get_group_rule(group_name):
+    return groups_collection.find_one({"groupName": group_name.lower()})
+  
 
 def job():
     with app.app_context():
@@ -212,8 +271,12 @@ def job():
         now = datetime.now(timezone.utc)
 
         for user in all_users:
-            
-            if user["lastSend"] is None:
+            group_data = get_group_rule(user.get("group"))
+            if not group_data:
+                continue
+
+            # first email
+            if user.get("lastSend") is None:
                 send_email(user)
                 continue
 
@@ -222,23 +285,19 @@ def job():
                 last_send = last_send.replace(tzinfo=timezone.utc)
 
             diff = now - last_send
+            sent_count = user.get("noOfEmailsSend", 0)
 
-            if user["group"].lower() == "student":
-                if user["noOfEmailsSend"] < 3 and diff >= timedelta(minutes=1):
-                    send_email(user)
-                elif user["noOfEmailsSend"] >= 3 and diff >= timedelta(minutes=5):
-                    send_email(user)
+            rules = group_data.get("rules", [])
 
-            elif user["group"].lower() == "teacher" and diff >= timedelta(seconds=30):
-                if user["noOfEmailsSend"] <=5:
+            for rule in rules:
+                max_emails = rule.get("maxEmails", 0)
+                wait_time = get_timedelta(rule.get("wait"))
+
+                if sent_count < max_emails and diff >= wait_time:
                     send_email(user)
-            elif user["group"].lower() == "office":
-                if user["noOfEmailsSend"] < 2 and diff >= timedelta(minutes=15):
-                    send_email(user)
-                elif user["noOfEmailsSend"] == 2 and diff >= timedelta(minutes=30):
-                    send_email(user)
-                elif user["noOfEmailsSend"] >= 3 and diff >= timedelta(hours=2):
-                    send_email(user)
+                    break
+
+
 
 scheduler = None
 

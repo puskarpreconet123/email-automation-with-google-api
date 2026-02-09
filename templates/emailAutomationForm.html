@@ -29,9 +29,15 @@
 
           <div class="space-y-2">
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Group Segment</label>
-            <input {% if user %} value="{{user.group}}" {% endif %} 
-                   type="text" name="group" required placeholder="e.g. Teacher/Student"
-                   class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200" />
+            <select name="group" class="w-full px-4 py-2 border border-gray-200 rounded-xl">
+  {% for group in allGroup %}
+  <option value="{{ group['groupName'] }}"
+    {% if user and user['group']|lower == group['groupName'] %} selected {% endif %}>
+    {{ group['groupName']|upper }}
+  </option>
+{% endfor %}
+
+</select>
           </div>
         </div>
         
