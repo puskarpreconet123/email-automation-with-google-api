@@ -171,7 +171,6 @@ def update_user(id):
 
 @app.route("/create-group", methods=["POST"])
 def create_group():
-    print(request.form)
     group_name = request.form.get("group_name")
     
     if groups_collection.find_one({"groupName": group_name.lower()}) is not None:
