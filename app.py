@@ -34,12 +34,10 @@ def to_local_filter(dt):
     local_tz = ZoneInfo("Asia/Kolkata")
     return dt.astimezone(local_tz).strftime("%Y-%m-%d %I:%M:%S %p")
 
-
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["emailAutomation"]
 users_collection = db["users"]
 groups_collection = db["groups"]
-
 
 # steps  for sending via google api . protocol - http, step-2
  
@@ -147,12 +145,10 @@ def dashboard():
         allGroup=all_group,
     )
 
-
 @app.route("/emailForm")
 def emailForm():
   all_group = list(groups_collection.find())
   return  render_template("emailAutomationForm.html", active="emailForm", allGroup = all_group)
-
 
 @app.route('/emailForm-edit/<id>', methods=['GET', 'POST'])
 def update_user(id):
@@ -173,34 +169,35 @@ def update_user(id):
     all_group = list(groups_collection.find())
     return render_template("emailAutomationForm.html", user=user, allGroup=all_group)
 
-
 @app.route("/create-group", methods=["POST"])
 def create_group():
+    print(request.form)
     group_name = request.form.get("group_name")
+    
+    if groups_collection.find_one({"groupName": group_name.lower()}) is not None:
+        return render_template("showerror.html", error_message="Group already exists" )
+    
+    rules = []
+    i = 1
+    while True:
+        max_emails = request.form.get(f"rule{i}_maxEmails")
+        if not max_emails:
+            print("max emails not found")
+            break
 
-    group_exist = groups_collection.find_one({"groupName": group_name.lower()}) is not None
-    if group_exist:
-        return render_template("showerror.html", error_message="Group already exists")
-
-    rule1 = {
-        "maxEmails": int(request.form.get("rule1_maxEmails") or 0),
-        "wait": {
-            "value": int(request.form.get("rule1_wait_value") or 0),
-            "unit": request.form.get("rule1_wait_unit")
+        rule = {
+            "maxEmails": int(max_emails),
+            "wait": {
+                "value": int(request.form.get(f"rule{i}_wait_value")),
+                "unit": request.form.get(f"rule{i}_wait_unit")
+            }
         }
-    }
-
-    rule2 = {
-        "maxEmails": int(request.form.get("rule2_maxEmails") or 0),
-        "wait": {
-            "value": int(request.form.get("rule2_wait_value") or 0),
-            "unit": request.form.get("rule2_wait_unit")
-        }
-    }
+        rules.append(rule)
+        i += 1
 
     group_doc = {
         "groupName": group_name.lower(),
-        "rules": [rule1, rule2],
+        "rules": rules,
         "createdAt": datetime.now(timezone.utc)
     }
 
@@ -208,19 +205,15 @@ def create_group():
 
     return redirect("/")
 
-
-
 @app.route('/details/<id>')
 def user_details(id):
     user = users_collection.find_one({"_id": ObjectId(id)})
     return render_template("userCard.html", user=user)
 
-
 @app.route('/delete/<id>')
 def delete_user(id):
     users_collection.delete_one({"_id": ObjectId(id)})
     return redirect("/")
-
 
 @app.route("/start")
 def start_scheduler():
@@ -230,7 +223,6 @@ def start_scheduler():
 
     create_scheduler()
     return redirect("/")
-
 
 @app.route("/stop")
 def stop_scheduler():
@@ -242,7 +234,6 @@ def stop_scheduler():
     scheduler = None
     return redirect("/")
  
-
 @app.route("/status")
 def scheduler_status():
     return {"running": scheduler.running if scheduler else False}
@@ -264,7 +255,6 @@ def get_timedelta(wait):
 def get_group_rule(group_name):
     return groups_collection.find_one({"groupName": group_name.lower()})
   
-
 def job():
     with app.app_context():
         all_users = list(users_collection.find())
@@ -297,14 +287,12 @@ def job():
                     send_email(user)
                     break
 
-
-
 scheduler = None
 
 def create_scheduler():
     global scheduler
     scheduler = BackgroundScheduler()
-    scheduler.add_job(job, 'interval', seconds=20, id="email_scheduler")
+    scheduler.add_job(job, 'interval', seconds=5, id="email_scheduler")
     scheduler.start()
 
 if __name__ == "__main__":

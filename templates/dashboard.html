@@ -3,201 +3,200 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
   
-  <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-  <div class="mb-4 sm:mb-0">
-    <div class="flex items-center gap-3">
-      <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
-      <span
-  id="automationStatus"
-  class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-100"
->
-  <span class="relative flex h-2 w-2">
-    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-  </span>
-  Running
-</span>
-    </div>
-    <p class="text-gray-500 mt-1 text-sm font-medium">Manage your users and monitor email campaign health.</p>
-  </div>
-
-  <div class="flex items-center gap-3">
-    <a href="/stop" 
-       class="automaton_button inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-bold rounded-xl text-white bg-red-600 hover:bg-red-700 shadow-sm shadow-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all active:scale-95">
-      Stop Automation
-    </a>
-  </div>
-</div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow duration-300">
-      <div>
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Users</p>
-        <p class="text-4xl font-extrabold text-indigo-600 mt-2">{{ users }}</p>
-      </div>
-      <div class="p-3 bg-indigo-50 rounded-full">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow duration-300">
-      <div>
-        <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Emails Sent</p>
-        <p class="text-4xl font-extrabold text-emerald-600 mt-2">{{ emails }}</p>
-      </div>
-      <div class="p-3 bg-emerald-50 rounded-full">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="border-b border-gray-200 mb-6">
-    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-      <button onclick="showTab('home', event)" class="tab-btn active-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600">
-        Overview
-      </button>
-      <button onclick="showTab('allUser', event)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-        User Management
-      </button>
-      <button onclick="showTab('group', event)" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-  Add Groups
-</button>
-
-    </nav>
-  </div>
-
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
-    
-    <div id="home" class="tab-content p-8 max-w-5xl mx-auto">
-  <div class="text-center py-10 bg-white rounded-3xl shadow-sm border border-slate-100 mb-10">
-    <div class="bg-indigo-50 inline-flex p-4 rounded-2xl mb-4">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    </div>
-    <h2 class="text-3xl font-extrabold text-gray-900">Welcome to Admin Area</h2>
-    <p class="text-gray-500 mt-3 max-w-md mx-auto text-lg">
-      Manage your email automation workflows and monitor recipient groups efficiently.
-    </p>
-  </div>
-
-  <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-        <span class="w-2 h-8 bg-indigo-500 rounded-full"></span>
-        Active Segments
-      </h3>
-      <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">{{ allGroup|length }} Groups Total</span>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-    {% for group in allGroup %}
-      <div class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 cursor-pointer">
-        <div class="flex items-center gap-4">
-          <div>
-            <h4 class="text-lg font-bold text-gray-900">{{ group.groupName|upper }}</h4>
-          </div>
-          <div class="ml-auto">
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Active</span>
-          </div>
+  <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-all hover:shadow-md">
+    <div class="mb-4 sm:mb-0">
+      <div class="flex items-center gap-4">
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">System Control</h1>
+        <div id="automationStatus">
+           <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-widest border border-slate-200">
+             Checking...
+           </span>
         </div>
       </div>
-    {% endfor %}
+      <p class="text-slate-500 mt-2 text-sm font-medium">Monitoring engine health and recipient delivery cycles.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/stop" 
+         class="automaton_button inline-flex items-center px-8 py-3.5 text-sm font-bold rounded-2xl text-white transition-all transform active:scale-95 shadow-lg">
+        Loading...
+      </a>
     </div>
   </div>
-</div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+    <div class="group bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 flex items-center justify-between hover:border-indigo-200 transition-all duration-300">
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Database Population</p>
+        <p class="text-5xl font-black text-indigo-600 mt-2 tracking-tighter">{{ users }}</p>
+      </div>
+      <div class="p-5 bg-indigo-50 rounded-2xl group-hover:scale-105 group-hover:bg-indigo-600 transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="group bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 flex items-center justify-between hover:border-emerald-200 transition-all duration-300">
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Broadcast Velocity</p>
+        <p class="text-5xl font-black text-emerald-600 mt-2 tracking-tighter">{{ emails }}</p>
+      </div>
+      <div class="p-5 bg-emerald-50 rounded-2xl group-hover:scale-105 group-hover:bg-emerald-600 transition-all duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex space-x-2 mb-8 bg-slate-100/50 p-1.5 rounded-2xl w-fit">
+    <button onclick="showTab('home', event)" class="tab-btn bg-white text-indigo-600 shadow-sm border border-slate-200 px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:text-slate-700">
+      Overview
+    </button>
+    <button onclick="showTab('allUser', event)" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:text-slate-700">
+      User Management
+    </button>
+    <button onclick="showTab('group', event)" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 text-slate-500 hover:text-slate-700">
+      Add Segments
+    </button>
+  </div>
+
+  <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden min-h-[500px]">
+    
+    <div id="home" class="tab-content p-12 max-w-5xl mx-auto">
+      <div class="text-center py-12 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200 mb-12">
+        <h2 class="text-4xl font-black text-slate-900 mb-4">Command Center</h2>
+        <p class="text-slate-500 max-w-lg mx-auto leading-relaxed">
+          Monitor your high-performance automation clusters and adjust group delivery logic in real-time.
+        </p>
+      </div>
+
+      <div class="space-y-8">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <h3 class="text-xl font-black text-slate-800 flex items-center gap-3">
+            <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
+            Active Segments
+          </h3>
+          <span class="text-xs font-black uppercase tracking-widest text-slate-400">{{ allGroup|length }} Total Groups</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% for group in allGroup %}
+          <div class="group bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:translate-y-[-4px] transition-all duration-300 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="h-10 w-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
+                  {{ group.groupName[0]|upper }}
+                </div>
+                <h4 class="text-lg font-bold text-slate-900 tracking-tight">{{ group.groupName|upper }}</h4>
+              </div>
+              <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
 
     <div id="allUser" class="tab-content hidden">
-      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-        <h2 class="text-lg font-semibold text-gray-700">Listed Emails</h2>
-        <span class="text-xs font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">{{ allUser|length }} Records</span>
+      <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <div>
+          <h2 class="text-xl font-black text-slate-800">Identity Registry</h2>
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Verified Delivery Targets</p>
+        </div>
+        <span class="text-xs font-black text-indigo-700 bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">{{ allUser|length }} Records</span>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+  {% if allUser|length == 0 %}
+    <div class="flex flex-col items-center justify-center py-20 px-6">
+      <div class="relative mb-6">
+        <div class="absolute inset-0 scale-150 bg-slate-50 rounded-full blur-2xl"></div>
+        
+        <div class="relative w-20 h-20 bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-200/50 flex items-center justify-center group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-300 group-hover:text-indigo-500 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-black text-slate-800 tracking-tight">Registry is Empty</h3>
+      <p class="text-slate-400 text-sm mt-2 max-w-[280px] text-center font-medium leading-relaxed">
+        No recipients have been discovered yet. Start by importing a segment or creating a new campaign.
+      </p>
+      
+      <a href="/emailForm"  class="mt-8 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-xs font-black text-slate-600 uppercase tracking-widest hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95 shadow-sm">
+        Add First Email
+      </a >
+    </div>
+
+  {% else %}
+    <table class="w-full text-left">
           <thead>
-            <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
-              <th scope="col" class="px-6 py-4 font-semibold">S.No</th>
-              <th scope="col" class="px-6 py-4 font-semibold">Email Identity</th>
-              <th scope="col" class="px-6 py-4 font-semibold text-center">Messages Sent</th>
-              <th scope="col" class="px-6 py-4 font-semibold text-right">Actions</th>
+            <tr class="text-slate-400 text-[10px] uppercase tracking-[0.2em] font-black border-b border-slate-100">
+              <th class="px-8 py-5">Rank</th>
+              <th class="px-8 py-5">Recipient Identity</th>
+              <th class="px-8 py-5 text-center">Volume</th>
+              <th class="px-8 py-5 text-right">Operations</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
-          {% for user in allUser %}
-           <tr class="hover:bg-gray-50 transition-colors duration-150" id="{{ user._id }}">
-
-<th scope="row" class="px-6 py-4 text-gray-500 font-medium">{{ loop.index }}</th>
-
-<td class="px-6 py-4">
-  <div class="flex items-center">
-    <div class="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs mr-3">
-      {{ user.email[0]|upper }}
-    </div>
-    <span class="text-gray-700 font-medium">{{ user.email }}</span>
-  </div>
-</td>
-
-<td class="px-6 py-4 text-center">
-  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-    {{ user.noOfEmailsSend }}
-  </span>
-</td>
-
-<td class="px-6 py-4 text-right space-x-2">
-  <a href="/details/{{ user._id }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-    Details
-  </a>
-
-  <a href="/delete/{{ user._id }}"
-     onclick="return confirm('Are you sure you want to delete this user?')"
-     class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-600 bg-red-50 hover:bg-red-100">
-    Delete
-  </a>
-</td>
-
-          {% endfor %}
+          <tbody class="divide-y divide-slate-50">
+            {% for user in allUser %}
+            <tr class="group hover:bg-slate-50/80 transition-all duration-200" id="{{ user._id }}">
+              <td class="px-8 py-5 text-slate-400 font-bold tabular-nums">#{{ loop.index }}</td>
+              <td class="px-8 py-5">
+                <div class="flex items-center">
+                  <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-0.5 mr-4 shadow-md group-hover:rotate-6 transition-transform">
+                    <div class="h-full w-full bg-white rounded-[0.9rem] flex items-center justify-center">
+                      <span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-purple-600 font-black text-sm">
+                        {{ user.email[0]|upper }}
+                      </span>
+                    </div>
+                  </div>
+                  <span class="text-slate-700 font-bold tracking-tight">{{ user.email }}</span>
+                </div>
+              </td>
+              <td class="px-8 py-5 text-center">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-xs font-black bg-white border border-slate-200 text-slate-700 shadow-sm">
+                  {{ user.noOfEmailsSend }}
+                </span>
+              </td>
+              <td class="px-8 py-5 text-right space-x-3">
+                <a href="/details/{{ user._id }}" class="text-xs font-black text-indigo-600 hover:text-indigo-800 transition-colors">DETAILS</a>
+                <a href="/delete/{{ user._id }}" 
+                   onclick="return confirm('Archive this record?')"
+                   class="text-xs font-black text-rose-500 hover:text-rose-700 transition-colors">DELETE</a>
+              </td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
-        
-        {% if allUser|length == 0 %}
-        <div class="p-8 text-center text-gray-500">
-            No users found.
-        </div>
-        {% endif %}
-      </div>
+  {% endif %}
+</div>
     </div>
+    
     {% include "groups.html" %}
   </div>
+</div>
 
 
 
 <script>
   function showTab(tabId, event) {
-    // 1. Hide all tab content
-    document.querySelectorAll('.tab-content').forEach(el => {
-      el.classList.add('hidden');
-    });
-    
-    // 2. Show the specific tab content
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
     document.getElementById(tabId).classList.remove('hidden');
 
-    // 3. Reset all tab buttons to "inactive" style
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.remove('border-indigo-500', 'text-indigo-600');
-      btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+      btn.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm', 'border', 'border-slate-200');
+      btn.classList.add('text-slate-500');
     });
 
-    // 4. Set the clicked button to "active" style
     if(event) {
-        event.currentTarget.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-        event.currentTarget.classList.add('border-indigo-500', 'text-indigo-600');
+        event.currentTarget.classList.add('bg-white', 'text-indigo-600', 'shadow-sm', 'border', 'border-slate-200');
+        event.currentTarget.classList.remove('text-slate-500');
     }
   }
 
@@ -205,46 +204,38 @@
     try {
       const res = await fetch("/status");
       const data = await res.json();
-      console.log(data.running)
-
+      
       const badge = document.getElementById("automationStatus");
       const button = document.querySelector(".automaton_button");
 
       if (data.running) {
-        badge.className =
-          "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-100";
         badge.innerHTML = `
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          Running
-        `;
-        button.classList.remove("bg-green-600", "hover:bg-green-700", "focus:ring-green-500");
-        button.classList.add("bg-red-600", "hover:bg-red-700", "focus:ring-red-500");
-        button.textContent = "Stop Automation";
+          <span class="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Active
+          </span>`;
+        button.className = "automaton_button inline-flex items-center px-8 py-3.5 text-sm font-bold rounded-2xl text-white bg-rose-500 hover:bg-rose-600 shadow-rose-200 shadow-lg transition-all transform active:scale-95";
+        button.textContent = "Shut Down Engine";
         button.href = "/stop";
       } else {
-        badge.className =
-          "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider border border-red-100";
         badge.innerHTML = `
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-          Stopped
-        `;
-        button.classList.remove("bg-red-600", "hover:bg-red-700" ,"focus:ring-red-500");
-        button.classList.add("bg-green-600", "hover:bg-green-700", "focus:ring-green-500");
-        button.textContent = "Start Automation";
+          <span class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-200">
+            <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+            Stopped
+          </span>`;
+        button.className = "automaton_button inline-flex items-center px-8 py-3.5 text-sm font-bold rounded-2xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200 shadow-lg transition-all transform active:scale-95";
+        button.textContent = "Start Engine";
         button.href = "/start";
       }
     } catch (err) {
-      console.error("Failed to fetch automation status",  err);
+      console.error("Link to engine lost", err);
     }
   }
 
   automation_status();
-
-  // Optional: refresh every 10 seconds
   setInterval(automation_status, 10000);
-
 </script>
 {% endblock %}
